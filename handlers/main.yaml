@@ -1,0 +1,6 @@
+- name: Restart Kea DHCP
+  become: true
+  ansible.builtin.service:
+    name: "{{ kea_dhcp_service_name }}"
+    state: restarted
+    enabled: true
