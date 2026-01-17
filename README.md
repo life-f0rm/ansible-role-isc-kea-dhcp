@@ -108,3 +108,8 @@ Make sure `kea_dhcp_config` is defined for your hosts (e.g. in `group_vars/kea_s
 ## License
 
 MIT
+
+## Notes
+
+- [https://cloudsmith.io/~isc/repos/kea-3-0/setup/#formats-deb](https://cloudsmith.io/~isc/repos/kea-3-0/setup/#formats-deb)
+- [https://kb.isc.org/docs/kea-ha-quickstart-guide](https://kb.isc.org/docs/kea-ha-quickstart-guide)
