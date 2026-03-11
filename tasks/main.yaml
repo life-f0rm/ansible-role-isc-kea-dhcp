@@ -1,12 +1,12 @@
-# - name: Install Kea DHCP packages
-#   become: true
-#   ansible.builtin.apt:
-#     name:
-#       - "{{ kea_dhcp_package_name }}"
-#       - kea-common
-#     state: present
-#     update_cache: true
-#   when: kea_dhcp4_enabled | bool
+- name: Install Kea DHCP packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - "{{ kea_dhcp_package_name }}"
+      - kea-common
+    state: present
+    update_cache: true
+  when: kea_dhcp4_enabled | bool
 
 - name: Ensure Kea configuration directory exists
   become: true
@@ -14,6 +14,8 @@
     path: "{{ kea_dhcp_config_dir }}"
     state: directory
     mode: "0750"
+    owner: "_kea"
+    group: "_kea"
 
 - name: Ensure Kea log directory exists
   become: true
