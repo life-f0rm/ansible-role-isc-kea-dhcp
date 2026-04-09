@@ -13,20 +13,21 @@ The role:
 - Installs Kea DHCP packages
 - Creates configuration and log directories
 - Renders a complete Kea DHCP4 configuration from an Ansible variable (YAML → JSON)
-- Validates the configuration using `kea-dhcp4 -t`
+- Validates the configuration using `kea-dhcp4` test mode (`-t` by default, configurable)
 - Ensures the Kea DHCP4 service is enabled and running
 
 ## Requirements
 
 - Supported OS: Ubuntu (see `meta/main.yaml`)
-- Minimum Ansible version: 2.10
+- Minimum Ansible version: 2.16
 - The role assumes the Kea packages create the Kea user and group (defaults to `_kea`).
 
 ## Role Variables
 
 Defaults are defined in `defaults/main.yaml`:
 
-You **must** override `kea_dhcp_config` with a full Kea DHCP4 configuration structure.
+The role includes a minimal DHCPv4 default configuration suitable for container/local testing.
+For production, you should override `kea_dhcp_config` with your full Kea DHCP4 configuration structure.
 The role will convert this YAML data structure to pretty-printed JSON using `to_nice_json` and write it to `kea_dhcp_config_file`.
 
 ## Example `kea_dhcp_config`
@@ -154,48 +155,6 @@ molecule test
   - `.github/workflows/**`
   - `renovate.json`
   - release automation files
-
-## Dependabot Alerts With Renovate (No Duplicate PRs)
-
-This repository is configured for Renovate to open dependency update PRs.
-To keep security visibility without duplicate PR noise, use Dependabot for alerting only:
-
-- Enable dependency graph: GitHub repository Settings -> Security -> Dependency graph -> Enable
-- Enable Dependabot alerts: GitHub repository Settings -> Security -> Dependabot alerts -> Enable
-- Do not enable Dependabot version updates for this repository (do not add `.github/dependabot.yml`)
-- Keep Renovate enabled so dependency update PRs continue to come from Renovate
-
-Result: GitHub still raises advisory alerts while Renovate remains the only dependency PR bot.
-
-## Branch And Workflow Protection Checklist
-
-These controls are configured in GitHub repository settings (not fully in role files):
-
-- Branch protection for `main`:
-  - Require a pull request before merging
-  - Require approvals (at least 1, preferably 2 for security-sensitive repos)
-  - Require status checks before merging
-  - Require branches to be up to date before merging
-  - Restrict direct pushes to `main`
-- Required status checks (after first successful runs, select exact check names):
-  - `Lint`
-  - `Molecule`
-  - `Actionlint`
-  - `Trivy FS Scan`
-  - `dependency-review`
-- Enable "Require review from Code Owners"
-- Keep CODEOWNERS ownership for workflow files (`.github/workflows/**`) so pipeline edits require owner review
-
-## Renovate Troubleshooting
-
-If Renovate does not create or update PRs as expected:
-
-- Confirm the Renovate app is installed on this repository
-- Check Renovate dashboard/issues and bot logs for permission or config errors
-- Validate `renovate.json` with the Renovate config validator
-- Confirm no competing update bot is creating lock/conflicting PRs
-- Check branch protection rules are not blocking Renovate from updating its branches
-- Verify workflow action updates are not blocked by policy settings
 
 ## Notes
 

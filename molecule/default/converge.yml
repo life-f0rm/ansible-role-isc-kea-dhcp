@@ -2,23 +2,5 @@
 - name: Converge
   hosts: all
   become: true
-  vars:
-    kea_dhcp_config:
-      Dhcp4:
-        interfaces-config:
-          interfaces:
-            - "*"
-        lease-database:
-          type: memfile
-          persist: true
-          lfc-interval: 0
-        valid-lifetime: 3600
-        renew-timer: 1800
-        rebind-timer: 2700
-        subnet4:
-          - id: 1
-            subnet: 192.0.2.0/24
-            pools:
-              - pool: 192.0.2.100 - 192.0.2.200
   roles:
     - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

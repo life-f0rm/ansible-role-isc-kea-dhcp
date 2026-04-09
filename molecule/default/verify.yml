@@ -3,6 +3,9 @@
   hosts: all
   become: true
   tasks:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
     - name: Gather package facts
       ansible.builtin.package_facts:
         manager: auto
@@ -11,6 +14,13 @@
       ansible.builtin.assert:
         that:
           - ansible_facts.packages['kea-dhcp4-server'] is defined
+
+    - name: Assert Kea DHCP service is running and enabled
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['kea-dhcp4-server.service'] is defined
+          - ansible_facts.services['kea-dhcp4-server.service'].state == 'running'
+          - ansible_facts.services['kea-dhcp4-server.service'].status == 'enabled'
 
     - name: Read rendered Kea config
       ansible.builtin.slurp:
@@ -21,8 +31,34 @@
       ansible.builtin.assert:
         that:
           - (kea_cfg.content | b64decode | from_json).Dhcp4 is defined
+          - (kea_cfg.content | b64decode | from_json).Dhcp4['interfaces-config'] is defined
+          - (kea_cfg.content | b64decode | from_json).Dhcp4['interfaces-config']['dhcp-socket-type'] == 'udp'
+          - ((kea_cfg.content | b64decode | from_json).Dhcp4.subnet4 | length) > 0
+
+    - name: Gather Kea config file metadata
+      ansible.builtin.stat:
+        path: /etc/kea/kea-dhcp4.conf
+      register: kea_cfg_stat
+
+    - name: Assert Kea config file owner, group and mode
+      ansible.builtin.assert:
+        that:
+          - kea_cfg_stat.stat.pw_name == 'root'
+          - kea_cfg_stat.stat.gr_name == '_kea'
+          - kea_cfg_stat.stat.mode == '0640'
 
     - name: Validate rendered Kea config with kea-dhcp4
       ansible.builtin.command:
         cmd: kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
       changed_when: false
+
+    - name: Gather UDP listeners
+      ansible.builtin.command:
+        cmd: ss -lun
+      register: udp_listeners
+      changed_when: false
+
+    - name: Assert DHCPv4 server listens on UDP 67
+      ansible.builtin.assert:
+        that:
+          - udp_listeners.stdout is search('(^|\\n).*:67\\s', multiline=True)

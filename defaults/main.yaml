@@ -10,12 +10,39 @@ kea_dhcp_service_name: kea-dhcp4-server
 # Kea configuration directory
 kea_dhcp_config_dir: /etc/kea
 
+# Kea configuration directory ownership and mode
+kea_dhcp_config_dir_owner: root
+kea_dhcp_config_dir_group: _kea
+kea_dhcp_config_dir_mode: "0750"
+
 # Kea configuration file
 kea_dhcp_config_file: "{{ kea_dhcp_config_dir }}/kea-dhcp4.conf"
+
+# Kea configuration file ownership and mode
+kea_dhcp_config_owner: root
+kea_dhcp_config_group: _kea
+kea_dhcp_config_mode: "0640"
 
 # Enable DHCPv4
 kea_dhcp4_enabled: true
 
-# Complete Kea configuration in YAML format (will be converted to JSON)
-# Override this in host_vars/group_vars with your complete configuration
-kea_dhcp_config: {}
+# Default Kea DHCPv4 configuration intended for container/local testing.
+# Override this in host_vars/group_vars for production deployments.
+kea_dhcp_config:
+  Dhcp4:
+    interfaces-config:
+      interfaces:
+        - "*"
+      dhcp-socket-type: "udp"
+    lease-database:
+      type: "memfile"
+      persist: true
+      lfc-interval: 0
+    valid-lifetime: 3600
+    renew-timer: 1800
+    rebind-timer: 2700
+    subnet4:
+      - id: 1
+        subnet: "192.0.2.0/24"
+        pools:
+          - pool: "192.0.2.100 - 192.0.2.200"

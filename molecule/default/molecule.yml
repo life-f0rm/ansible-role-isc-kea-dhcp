@@ -8,8 +8,9 @@ driver:
   name: docker
 
 platforms:
-  - name: kea-ubuntu-jammy
-    image: geerlingguy/docker-ubuntu2204-ansible:latest
+  - name: docker-ubuntu2604-ansible
+    # Pinned by digest for supply-chain integrity. Refresh intentionally (pulled 2026-04-09 UTC).
+    image: geerlingguy/docker-ubuntu2604-ansible@sha256:0078a36e38a6a7ec0871c80c258b86a591167f58b2f8ef2f7e13169c934ba0ea
     user: root
     pre_build_image: true
     privileged: true
