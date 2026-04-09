@@ -64,7 +64,9 @@ jobs:
         run: |
           set -euo pipefail
           ansible --version
-          ansible-galaxy collection list
+          mkdir -p "$HOME/.ansible/collections" /usr/share/ansible/collections
+          ansible-galaxy collection list \
+            --collections-path "$HOME/.ansible/collections:/usr/share/ansible/collections" || true
 
       - name: Run Molecule
         run: molecule test
