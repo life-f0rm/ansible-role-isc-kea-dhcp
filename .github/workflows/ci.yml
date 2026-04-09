@@ -60,6 +60,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
+      - name: Install Ansible collections for Molecule
+        run: |
+          set -euo pipefail
+          ansible-galaxy collection install -r molecule/default/collections.yml
+
       - name: Debug Ansible environment
         run: |
           set -euo pipefail
