@@ -17,15 +17,6 @@
     owner: "_kea"
     group: "_kea"
 
-- name: Ensure Kea log directory exists
-  become: true
-  ansible.builtin.file:
-    path: "{{ kea_dhcp_log_dir }}"
-    state: directory
-    mode: "0750"
-    owner: "_kea"
-    group: "_kea"
-
 - name: Generate Kea DHCP4 configuration from YAML
   become: true
   ansible.builtin.copy:

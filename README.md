@@ -86,7 +86,7 @@ kea_dhcp_config:
     loggers:
       - name: "kea-dhcp4"
         output_options:
-          - output: "/var/log/kea/kea-dhcp4.log"
+          - output: "syslog"
           - output: "stdout"
         severity: "INFO"
         debuglevel: 0
