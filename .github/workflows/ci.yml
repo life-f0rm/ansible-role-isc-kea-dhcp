@@ -1,6 +1,7 @@
 ---
 name: ci
 
+# yamllint disable-line rule:truthy
 on:
   push:
     branches:
@@ -21,11 +22,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        # yamllint disable-line rule:line-length
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Set up Python
-        # yamllint disable-line rule:line-length
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.12"
@@ -48,11 +47,9 @@ jobs:
     timeout-minutes: 35
     steps:
       - name: Checkout
-        # yamllint disable-line rule:line-length
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Set up Python
-        # yamllint disable-line rule:line-length
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.12"
@@ -62,6 +59,12 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
+
+      - name: Debug Ansible environment
+        run: |
+          set -euo pipefail
+          ansible --version
+          ansible-galaxy collection list
 
       - name: Run Molecule
         run: molecule test

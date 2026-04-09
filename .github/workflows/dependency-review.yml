@@ -1,6 +1,7 @@
 ---
 name: dependency-review
 
+# yamllint disable-line rule:truthy
 on:
   pull_request: {}
 
@@ -12,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Review dependencies
-        # yamllint disable-line rule:line-length
         uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48
         with:
           fail-on-severity: moderate
