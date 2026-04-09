@@ -1,10 +1,10 @@
 # Kea DHCP role defaults
 
 # Kea package name
-# kea_dhcp_package_name: "kea-dhcp4-server"
+kea_dhcp_package_name: "kea-dhcp4-server"
 
 # Kea service name
-kea_dhcp_service_name: "isc-kea-dhcp4-server"
+kea_dhcp_service_name: "kea-dhcp4-server"
 
 # Kea configuration directory
 kea_dhcp_config_dir: "/etc/kea"
