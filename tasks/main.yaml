@@ -1,3 +1,15 @@
+---
+- name: Validate required DHCPv4 configuration
+  ansible.builtin.assert:
+    that:
+      - kea_dhcp_config is mapping
+      - kea_dhcp_config | length > 0
+      - kea_dhcp_config.Dhcp4 is defined
+    fail_msg: >-
+      kea_dhcp_config must be a non-empty mapping containing a Dhcp4 key when
+      kea_dhcp4_enabled is true.
+  when: kea_dhcp4_enabled | bool
+
 - name: Install Kea DHCP packages
   become: true
   ansible.builtin.apt:
@@ -6,6 +18,7 @@
       - kea-common
     state: present
     update_cache: true
+    cache_valid_time: 3600
   when: kea_dhcp4_enabled | bool
 
 - name: Ensure Kea configuration directory exists
@@ -14,8 +27,9 @@
     path: "{{ kea_dhcp_config_dir }}"
     state: directory
     mode: "0750"
-    owner: "_kea"
-    group: "_kea"
+    owner: _kea
+    group: _kea
+  when: kea_dhcp4_enabled | bool
 
 - name: Generate Kea DHCP4 configuration from YAML
   become: true
@@ -23,9 +37,10 @@
     content: "{{ kea_dhcp_config | to_nice_json }}"
     dest: "{{ kea_dhcp_config_file }}"
     mode: "0644"
-    owner: "_kea"
-    group: "_kea"
+    owner: _kea
+    group: _kea
   notify: Restart Kea DHCP
+  when: kea_dhcp4_enabled | bool
 
 - name: Validate Kea configuration
   become: true
@@ -35,6 +50,7 @@
   register: kea_validate_result
   changed_when: false
   failed_when: kea_validate_result.rc != 0
+  when: kea_dhcp4_enabled | bool
 
 - name: Ensure Kea DHCP service is enabled and started
   become: true
@@ -42,4 +58,4 @@
     name: "{{ kea_dhcp_service_name }}"
     enabled: true
     state: started
-
+  when: kea_dhcp4_enabled | bool

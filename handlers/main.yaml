@@ -1,3 +1,4 @@
+---
 - name: Restart Kea DHCP
   become: true
   ansible.builtin.service:

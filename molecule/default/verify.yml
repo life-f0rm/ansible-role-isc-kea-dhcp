@@ -1,0 +1,28 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert Kea DHCP package is installed
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.packages['kea-dhcp4-server'] is defined
+
+    - name: Read rendered Kea config
+      ansible.builtin.slurp:
+        src: /etc/kea/kea-dhcp4.conf
+      register: kea_cfg
+
+    - name: Assert rendered Kea config contains Dhcp4 object
+      ansible.builtin.assert:
+        that:
+          - (kea_cfg.content | b64decode | from_json).Dhcp4 is defined
+
+    - name: Validate rendered Kea config with kea-dhcp4
+      ansible.builtin.command:
+        cmd: kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+      changed_when: false

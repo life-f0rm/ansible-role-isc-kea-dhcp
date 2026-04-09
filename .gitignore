@@ -1,0 +1,8 @@
+# vscode
+.vscode/
+
+# venv
+.venv/
+
+# ansible
+.ansible/

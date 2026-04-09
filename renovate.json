@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "branchConcurrentLimit": 5,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard",
+  "extends": ["config:recommended"],
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* 3-5 * * 1"]
+  },
+  "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "groupName": "github-actions",
+      "matchManagers": ["github-actions"]
+    },
+    {
+      "addLabels": ["major-update"],
+      "dependencyDashboardApproval": true,
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    }
+  ],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "behind-base-branch",
+  "semanticCommits": "enabled",
+  "vulnerabilityAlerts": {
+    "automerge": false,
+    "enabled": true,
+    "labels": ["security"]
+  }
+}

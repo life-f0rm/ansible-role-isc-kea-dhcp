@@ -1,3 +1,8 @@
 {
-    "ansible.python.interpreterPath": "/home/h01/.venvs/ansible/bin/python"
+    "cSpell.words": [
+        "ansible",
+        "debuglevel",
+        "memfile",
+        "venv"
+    ]
 }

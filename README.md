@@ -35,8 +35,8 @@ kea_dhcp_config:
       interfaces:
         - "guests"
         - "default"
-        - "t3_users"
-        - "nwmgmnt"
+        - "priv_users"
+        - "nw_mgt"
       dhcp-socket-type: "raw"
     lease-database:
       type: "memfile"
@@ -51,7 +51,7 @@ kea_dhcp_config:
       - name: "domain-name"
         data: "local"
     subnet4:
-      # t3_users VLAN (192.168.3.0/24)
+      # priv_users VLAN (192.168.3.0/24)
       - id: 3
         subnet: "192.168.3.0/24"
         pools:
@@ -75,7 +75,7 @@ kea_dhcp_config:
         option-data:
           - name: "routers"
             data: "192.168.10.126"
-      # nwmgmnt VLAN (192.168.101.0/24)
+      # nw-mgt VLAN (192.168.101.0/24)
       - id: 91
         subnet: "192.168.101.0/24"
         pools:
@@ -108,6 +108,46 @@ Make sure `kea_dhcp_config` is defined for your hosts (e.g. in `group_vars/kea_s
 ## License
 
 MIT
+
+## Development And QA
+
+This repository uses security-first automation for validation and releases:
+
+- CI runs `ansible-lint`, `yamllint`, and `molecule test`
+- GitHub Actions workflows are pinned to immutable commit SHAs
+- Dependency review runs on pull requests
+- Renovate manages workflow and tooling updates
+- Release Please manages changelog and release PR automation
+
+### Local Validation
+
+Recommended local flow:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements-dev.txt
+
+ansible-lint .
+yamllint .
+molecule test
+```
+
+## Release Process
+
+- Follow Conventional Commits (`feat:`, `fix:`, `chore:`, etc.)
+- Merges to `main` update the Release Please release PR
+- Merging the release PR creates the GitHub release and updates `CHANGELOG.md`
+
+## Security Posture
+
+- Minimal GitHub Actions token permissions are used by default
+- No long-lived cloud secrets are required for CI
+- Security-sensitive changes should be reviewed with extra care:
+  - `.github/workflows/**`
+  - `renovate.json`
+  - release automation files
 
 ## Notes
 

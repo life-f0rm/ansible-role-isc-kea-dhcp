@@ -1,0 +1,20 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: cba56bcde1fdd01c1deb3f945e69764c291a6530 # v1.38.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/ansible/ansible-lint
+    rev: 5fac056c45595896c973fbde871f01f6cb14d74c # v26.4.0
+    hooks:
+      - id: ansible-lint
+        files: ^(tasks|handlers|defaults|meta|molecule)/.*\.(yml|yaml)$
